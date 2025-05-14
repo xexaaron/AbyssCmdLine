@@ -178,7 +178,7 @@ namespace aby::util {
         bool prettify = supports_ansi_seq() && opts.term_colors;
         bool do_help = false;
         this->flag("h", "Display help information.", &do_help, false);
-        std::vector<bool> found(m_Args.size(), false);
+        std::vector<std::string> found(m_Args.size(), "");
         Errors errors = { "", 0, {} }; 
         bool success = true;
         
@@ -190,7 +190,7 @@ namespace aby::util {
                 std::string call_conv_flag = "-" + m_Args[arg].arg;
 
                 if (curr_arg.starts_with(call_conv_opt) || curr_arg.starts_with(call_conv_flag)) {
-                    found[arg] = true;
+                    found.push_back(m_Args[arg].arg);
                     switch (m_Args[arg].type) {
                         case EArgType::OPT: {
                             std::string equal_conv = call_conv_opt + "=";
@@ -239,16 +239,23 @@ namespace aby::util {
 
         errors.missing_args = "Missing: [";
         bool first = true;
-        for (std::size_t i = 0; i < m_Args.size(); i++) {
-            if (!found[i] && m_Args[i].req) {
+        for (auto& arg : m_Args) {
+            bool found_current = false;
+            for (auto& found_arg : found) {
+                if (found_arg == arg.arg) {
+                    found_current = true;
+                    continue;
+                }
+            }
+            if (!found_current && arg.req) {
                 if (!first) {
                     errors.missing_args += ", ";
                 }
-                std::string conv = m_Args[i].type == EArgType::OPT ? "--" : "-";
+                std::string conv = arg.type == EArgType::OPT ? "--" : "-";
                 if (prettify) {
-                    errors.missing_args += "\033[1;36m" + conv + m_Args[i].arg + "\033[0m";
+                    errors.missing_args += "\033[1;36m" + conv + arg.arg + "\033[0m";
                 } else {
-                    errors.missing_args += conv + m_Args[i].arg;
+                    errors.missing_args += conv + arg.arg;
                 }
                 errors.missing_arg_ct++;
                 success = false;
