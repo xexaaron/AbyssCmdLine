@@ -25,6 +25,7 @@ namespace aby::util {
             std::string desc = "";
             EArgType    type = EArgType::OPT;
             bool        req = false;
+            std::vector<std::string> invalidates_req;
             union {
                 std::string* string;
                 bool* boolean;
@@ -37,7 +38,7 @@ namespace aby::util {
         };
     public:
         CmdLine& opt(std::string_view arg, std::string_view desc, std::string* result, bool req = false);
-        CmdLine& flag(std::string_view arg, std::string_view desc, bool* result, bool req = false);
+        CmdLine& flag(std::string_view arg, std::string_view desc, bool* result, bool req = false, const std::vector<std::string>& invalidates_req = {});
         void help(const Opts& opts = {}, const Errors& errs = {});
         bool parse(int argc, char** argv, const Opts& opts);
     private:

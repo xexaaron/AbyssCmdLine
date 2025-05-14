@@ -164,8 +164,8 @@ namespace aby::util {
         return *this;
     }
 
-    CmdLine& CmdLine::flag(std::string_view arg, std::string_view desc, bool* result, bool req) {
-        Arg a{ std::string(arg), std::string(desc), EArgType::FLAG, req };
+    CmdLine& CmdLine::flag(std::string_view arg, std::string_view desc, bool* result, bool req, const std::vector<std::string>& invalidates_req) {
+        Arg a{ std::string(arg), std::string(desc), EArgType::FLAG, req, invalidates_req };
         a.result.boolean = result;
         m_Args.emplace_back(a);
         return *this;
@@ -215,6 +215,15 @@ namespace aby::util {
                         }
                         case EArgType::FLAG:
                             *(m_Args[arg].result.boolean) = true;
+                            if (!m_Args[arg].invalidates_req.empty()) {
+                                for (auto& argument : m_Args) {
+                                    for (const auto& invalidation : m_Args[arg].invalidates_req) {
+                                        if (invalidation == argument.arg && invalidation != m_Args[arg].arg) {
+                                            argument.req = false;
+                                        }
+                                    }
+                                }
+                            }
                             break;
                         default:
                             std::unreachable();
