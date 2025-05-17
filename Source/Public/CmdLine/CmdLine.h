@@ -35,11 +35,12 @@ namespace aby::util {
             std::string missing_args;
             std::size_t missing_arg_ct;
             std::vector<std::string> additional_errs;
+            Errors() : missing_args(""), missing_arg_ct(0), additional_errs() {}
         };
     public:
         CmdLine& opt(std::string_view arg, std::string_view desc, std::string* result, bool req = false);
         CmdLine& flag(std::string_view arg, std::string_view desc, bool* result, bool req = false, const std::vector<std::string>& invalidates_req = {});
-        void help(const Opts& opts = {}, const Errors& errs = {});
+        void help(const Opts& opts, const Errors& errs = Errors{});
         bool parse(int argc, char** argv, const Opts& opts);
     private:
         std::vector<Arg> m_Args;

@@ -71,7 +71,7 @@ namespace aby::util {
         bool do_help = false;
         this->flag("h", "Display help information.", &do_help, false);
         std::vector<std::string> found(m_Args.size(), "");
-        Errors errors = { "", 0, {} }; 
+        Errors errors;
         bool success = true;
         
         for (int i = 0; i < argc; i++) {
