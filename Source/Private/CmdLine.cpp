@@ -16,9 +16,6 @@
 #endif
 #include <utility>
 
-
-#define TIME_CMDLINE
-
 #if !defined(NDEBUG) && defined(TIME_CMDLINE)
     #include <chrono>
 
