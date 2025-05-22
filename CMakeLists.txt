@@ -23,9 +23,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE "Source/Public" ${ABY_PP_INCL
 target_link_libraries(${PROJECT_NAME} PrettyPrint)
 add_dependencies(${PROJECT_NAME} PrettyPrint)
 
-if(CMAKE_BUILD_TYPE STREQUAL Debug)
+#if(CMAKE_BUILD_TYPE STREQUAL Debug)
     add_executable(${PROJECT_NAME}Test "Source/Tests/Test.cpp")
     target_include_directories(${PROJECT_NAME}Test PRIVATE "Source/Public")
     target_link_libraries(${PROJECT_NAME}Test ${PROJECT_NAME})
     add_dependencies(${PROJECT_NAME}Test ${PROJECT_NAME})
-endif()
+#endif()

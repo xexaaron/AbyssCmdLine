@@ -5,6 +5,7 @@
 #include <ostream>
 #include <iostream>
 
+
 namespace aby::util {
 
     class CmdLine {
@@ -13,12 +14,13 @@ namespace aby::util {
             std::string   desc        = "";
             std::string   name        = "";
             std::ostream& cerr        = std::cerr;
-            bool          help        = true; // Display help if failed to parse.
-            bool          term_colors = true; // Use colored output if utf8 supported terminal.
+            bool          help        = true;  // Display help if failed to parse.
+            bool          term_colors = true;  // Use colored output if utf8 supported terminal.
+            bool          log_cmd     = false; // Log the input command.
         };
         enum class EArgType {
-            OPT,
-            FLAG
+            OPT,        // "--opt VALUE"
+            FLAG        // "-flag"
         };
         struct Arg {
             std::string arg = "";
@@ -42,6 +44,10 @@ namespace aby::util {
         CmdLine& flag(std::string_view arg, std::string_view desc, bool* result, bool req = false, const std::vector<std::string>& invalidates_req = {});
         void help(const Opts& opts, const Errors& errs = Errors{});
         bool parse(int argc, char** argv, const Opts& opts);
+    private:
+        bool is_number(const std::string& string) const;
+        void find_missing(const std::vector<std::string>& found, Errors& errors, bool& success);
+        void log_command(const std::string& program_name, const std::vector<std::string>& found);
     private:
         std::vector<Arg> m_Args;
     };

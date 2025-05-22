@@ -14,8 +14,9 @@ int main(int argc, char** argv) {
         .desc = "Cmdline utility for use of AbyssFreetype library",     
         .name = "AbyssFreetype",
         .cerr = std::cerr,         
-        .help = true,        
+        .help        = true,        
         .term_colors = true,  
+        .log_cmd     = true,
     };
 
     InFontCfg in_cfg;
